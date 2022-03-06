@@ -16,7 +16,7 @@ import FormControl from '@mui/material/FormControl';
 
 
 function Waiting() {
-    const showShare = true;
+    const showShare = false;
     const showWordSubmit = true;
 
     const shareLinkComp = () => (
@@ -30,7 +30,7 @@ function Waiting() {
                 </p>
             </div>
                 <div className='share'>
-                    <CreateRoomModal/>
+                    <CreateShareModal/>
                 </div>
         </>
     )
@@ -70,7 +70,7 @@ function Waiting() {
   );
 }
 
-function CreateRoomModal() {
+function CreateShareModal() {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
