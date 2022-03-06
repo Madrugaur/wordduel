@@ -10,7 +10,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
-
+import Loading from "./Loading"
 
 
 function Waiting() {
@@ -44,8 +44,8 @@ function Waiting() {
           <style>{"body { background-color: black; }"}</style>
         </Helmet>
         <div className="Word-Duel-Title">Word Duel</div>
-
-        {showWordSubmit !== undefined ? wordSubmit() : <></>}
+        <Loading type={"spin"} color={"#FFFFFF"}/>
+        {wordSubmitted === undefined ? <p>Waiting for Opponent</p> : <p>{"Submitted: " + wordSubmitted}</p>}
       </div>
     </>
   );

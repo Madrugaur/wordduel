@@ -18,6 +18,7 @@ function Dashboard() {
   const [ allRooms, setRooms ] = React.useState([])
   const [ filteredRooms, setFilteredRooms ] = React.useState([])
   const [ filter, setFilter ] = React.useState(undefined)
+  const navigate = useNavigate()
   const joinRoom = React.useCallback((code) => {
     fetch(process.env.REACT_APP_BACKEND_URL + "/join-room", {
       method: "POST",
