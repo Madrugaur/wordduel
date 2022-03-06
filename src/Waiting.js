@@ -3,7 +3,6 @@ import React from 'react';
 import {Helmet} from 'react-helmet';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import List from "./List";
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
