@@ -40,8 +40,16 @@
 }
 
 .List{
+    margin: 0 auto;
+    justify-content: space-between;
+    color: black;
     text-align: center;
-    color: #FFFFFF;
+    padding-top: 1em;
+    width: 300px;
+}
+
+.List-Item:hover{
+    background-color: gray;
 }
 
 #outlined-required-label{

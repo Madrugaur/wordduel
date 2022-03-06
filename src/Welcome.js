@@ -3,13 +3,14 @@ import React from 'react';
 import {Helmet} from 'react-helmet';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { purple } from '@mui/material/colors';
+import { useNavigate } from 'react-router-dom';
+
 
 
 function Welcome() {
   return (
-    
     <>
+    
     <div className="Welcome">
       <Helmet>
         <style>{'body { background-color: black; }'}</style>
@@ -33,13 +34,25 @@ function Welcome() {
   );
 }
 
+function SubmitBtn() {
+  const navigate = useNavigate();
+  return(
+    <div class="submitBtn">
+          <Button onClick={() => {navigate('/dashboard');}} variant="contained">SUBMIT</Button>
+    </div>
+  );
+}
+
 class NameForm extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {value: ''};
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    
   }
+  
 
   handleChange(event) {    
     this.setState({ value: event.target.value }); 
@@ -47,7 +60,6 @@ class NameForm extends React.Component {
   handleSubmit(event) { 
     console.log(this.state.value)
   }
-
   render() {
     return (
       <div class ="form">
@@ -61,9 +73,7 @@ class NameForm extends React.Component {
           focused
         />
         </div>
-        <div class="submitBtn">
-        <Button variant="contained">SUBMIT</Button>
-        </div>
+        <SubmitBtn/>
         
 
       </div>
