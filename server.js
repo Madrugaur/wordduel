@@ -1,22 +1,48 @@
 const express = require("express")
-var bodyParser = require('body-parser')
-const app = express()
+const bodyParser = require('body-parser')
+const {v4: uuid } = require("uuid")
+const fs = require('fs');
 
+const app = express()
 app.use(bodyParser.json())
 
 app.use(bodyParser.urlencoded({
     extended: true
-  }));
+}));
+
+/**** MODEL SECTION ****/
+
+function Room(name, private, owner) {
+    this.name = name
+    this.private = (private === 'true')
+    this.owner = owner
+    this.players = [ owner ]
+    this.states = {
+        [owner]: []
+    }
+    this.times = {}
+    this.wordSelection = {}
+    this.code = uuid()
+    this.status = "open"
+    this.startTime = undefined
+    this.endTime = undefined
+    this.winner = undefined
+}
+
 /**** START DATA SECTION ****/
 
 const players = new Set()
-var roomExample = {
-    private: true,
-    roomName: "Boob",
-    roomCode: "aw2e34qadad3",
-    owner: "Braden Little"
+const raw = fs.readFileSync('words.txt').toString().split("\n");
+const wordLookupTable = {}
+raw.forEach(word => wordLookupTable[word] = word)
+
+var roomExamplePrivate = new Room("Braden's Room", "true", "Braden Little")
+var roomExamplePublic = new Room("Renee's Room", "false", "Renee")
+var testRooms = {
+    [roomExamplePrivate.code]: roomExamplePrivate,
+    [roomExamplePublic.code]: roomExamplePublic
 }
-const rooms = {}
+const rooms = testRooms
 
 /**** START DATA SECTION ****/
 
@@ -28,6 +54,66 @@ const packError = (err) => {
 
 const isEmpty = (obj) => {
     return obj.constructor === Object && Object.keys(obj).length === 0
+}
+
+const isBlank = (str) => {
+    return str === undefined || str.length === 0
+}
+
+const getRoom = (code) => {
+    const searchResult = Object.values(rooms).filter(room => room.code === code)
+    if (searchResult === undefined) return undefined
+    return searchResult[0]
+}
+
+const roomReady = (room) => {
+    const player1Ready = room.wordSelection[room.players[0]] !== undefined
+    const player2Ready = room.wordSelection[room.players[1]] !== undefined
+
+    return  player1Ready && player2Ready
+}
+
+const getOpponent = (room, username) => {
+    const players = room.players
+    if (room.players[0] === username) 
+        return room.players[1]
+    else
+        return room.players[0]
+}
+
+const getChallangeWord = (room, username) => {
+    const opponent = getOpponent(room, username)
+    return room.wordSelection[opponent]
+}
+
+const evaluate = (guess, challangeWord) => {
+    const gArray = Array.from(guess)
+    const cArray = Array.from(challangeWord)
+    var pattern = ""
+    for (var i = 0; i < gArray.length; i++){
+        const c = cArray[i]
+        const g = gArray[i]
+        if (c === g) pattern += "G" // match value and location
+        else if (cArray.includes(g)) pattern += "Y" // match location
+        else pattern += "B" // no match
+    }
+    return pattern
+}
+
+const bankPattern = (pattern, guess, room, username) => {
+    room.states[username].push({guess: guess, pattern: pattern})
+}
+
+const winningPattern = (pattern) => {
+    return pattern === "GGGGG"
+}
+
+const gameOver = (room) => {
+    const p1 = room.players[0]
+    const p2 = room.players[1]
+    const p1Done = (room.winner === p1) || (room.states[p1].length === 6)
+    const p2Done = (room.winner === p2) || (room.states[p2].length === 6)
+    return p1Done && p2Done
 }
 
 /**** START ENDPOINTS ****/
@@ -42,15 +128,20 @@ const isEmpty = (obj) => {
  */
 app.post("/new-player", (req, res) => {
     const body = req.body
-    if (isEmpty(body)) 
+    if (isEmpty(body)) {
         res.status(400).send(packError("Body missing"))
+        return
+    }
     const playerName = body["player-name"]
-    if ( playerName === undefined || playerName.length === 0 ) 
+    if ( isBlank(playerName) )  {
         res.status(400).send(packError("Missing player-name"))
+        return;
+    }
 
-    if ( players.has(playerName) ) 
+    if ( players.has(playerName) ) {
         res.status(409).send(packError("username already in use"))
-    
+        return
+    }    
     players.add(playerName)
 
     res.send(playerName)
@@ -58,14 +149,19 @@ app.post("/new-player", (req, res) => {
 
 app.post("/remove-player", (req, res) => {
     const body = req.body
-    if (isEmpty(body)) 
+    if (isEmpty(body)) {
         res.status(400).send(packError("Body missing"))
+        return
+    }
     const playerName = body["player-name"]
-    if ( playerName === undefined || playerName.length === 0 ) 
+    if ( isBlank(playerName) ) {
         res.status(400).send(packError("Missing player-name"))
-
-    if ( !players.has(playerName) ) 
+        return
+    }
+    if ( !players.has(playerName) ) {
         res.status(409).send(packError("username already deleted"))
+        return;
+    }
     
     players.delete(playerName)
 
@@ -83,9 +179,42 @@ app.post("/remove-player", (req, res) => {
  * @param code: String
  */
 app.get("/open-rooms", (req, res) => {
-
-    res.send(JSON.stringify(rooms))
+    const filteredRooms = Object.values(rooms)
+    .filter(room => (!room.private))
+    .filter(room => (room.status === "open"))
+    .map(room => ({code: room.code, name: room.name}))
+    res.send(JSON.stringify(filteredRooms))
 });
+
+app.post("/join-room", (req, res) => {
+    const body = req.body;
+    if (isEmpty(body)) {
+        res.status(400).send(packError("Missing body"))
+        return;
+    }
+    const code = body.code;
+    const username = body.username
+    if (isBlank(code)) {
+        res.status(400).send(packError("Missing code"))
+        return;
+    }
+    if (isBlank(username)) {
+        res.status(400).send(packError("Missing username"))
+        return;
+    }
+
+    const room = getRoom(code)
+    if (room === undefined) {
+        res.status(404).send(packError("Unknown room code"))
+        return;
+    }    
+    room.players.push(username)
+    room.states[username] = []
+    room.status = "word-selection"
+    res.send(JSON.stringify({status: "Sucess"}))
+    console.log(room)
+})
+
 
 /*# End Dashboard Page #*/
 
@@ -99,7 +228,6 @@ app.get("/open-rooms", (req, res) => {
 */
 app.get("/get-game-results", (req, res) => {
     res.send("Unimplemented Endpoint")
-
 });
 
 /*# End Results Page #*/
@@ -107,17 +235,59 @@ app.get("/get-game-results", (req, res) => {
 /*# Start Room Config Page #*/
 
 app.post("/create-room", (req, res) => {
-    res.send("Unimplemented Endpoint")
+    const body = req.body;
+    if (isEmpty(body)) {
+        res.status(400).send(packError("Missing body"))
+        return;
+    }
+    
+    const private = body["private"]
+    const name = body["name"]
+    const username = body["username"]
 
+    if (isBlank(private)) {
+        res.status(400).send(packError("Missing private parameter"))
+        return;
+    }
+        
+    if (isBlank(name)) {
+        res.status(400).send(packError("Missing name parameter"))
+        return;
+    }
+    if (isBlank(username)){
+        res.status(400).send(packError("Missing username parameter"))
+        return;
+    }
+    
+    const newRoom = new Room(name, private, username)
+
+    rooms[newRoom.code] = newRoom
+    res.send(JSON.stringify({ status: "Sucess" }))
 });
+
+
 
 /*# End Room Config Page #*/
 
 /*# Start Waiting Page #*/
 
 app.get("/room-status", (req, res) => {
-    res.send("Unimplemented Endpoint")
-
+    const query = req.query
+    if (isEmpty(query)) {
+        res.status(400).send(packError("Missing query parameters"))
+        return;
+    }
+    const code = query.code
+    if (isBlank(code)) {
+        res.status(400).send(packError("Missing code parameter"))
+        return;
+    }
+    
+    const room = getRoom(code)
+    if (room === undefined)
+        res.status(404).send(packError("Unknown room code"))
+    else
+        res.send(JSON.stringify({ "status": room.status }))
 });
 
 /*# End Waiting Page #*/
@@ -125,8 +295,46 @@ app.get("/room-status", (req, res) => {
 /*# Start Word Selection Page #*/
 
 app.post("/submit-word-selection", (req, res) => {
-    res.send("Unimplemented Endpoint")
+    const body = req.body 
+    if ( isEmpty(body) )
+        res.status(400).send(packError("Missing body"))
+    const code = body.code
+    const word = body.word
+    const username = body.username
+    if (isBlank(code)) {
+        res.status(400).send(packError("Missing code parameter"))
+        return;
+    }
+    if (isBlank(word)) {
+        res.status(400).send(packError("Missing word parameter"))
+        return;
+    }
+    if (isBlank(username)) {
+        res.status(400).send(packError("Missing username parameter"))
+        return;
+    }
+    const room = getRoom(code)
+    const roomWordSelection = room.wordSelection;
+    if (roomWordSelection[username] !== undefined) {
+        res.status(400).send(packError("Word Selection already set"))
+        return;
+    }
+        
 
+    if (!room.players.includes(username))
+        res.status(400).send(packError("User not in room"))
+    else {
+        if (wordLookupTable[word] === undefined)
+            res.send(JSON.stringify({accepted: false}))
+        else {
+            room.wordSelection[username] = word
+            if (roomReady(room)) {
+                room.status = 'ready'
+            }
+            res.send(JSON.stringify({accepted: true}))
+        }
+    }
+    console.log(room)
 });
 
 /*# End Word Selection Page #*/
@@ -134,26 +342,131 @@ app.post("/submit-word-selection", (req, res) => {
 /*# Start Game Page #*/
 
 app.post("/guess-word", (req, res) => {
-    res.send("Unimplemented Endpoint")
+    const body = req.body;
+    if (isEmpty(body)) {
+        res.status(400).send(packError("Missing body"))
+        return;
+    }
+    const code = body.code
+    const username = body.username
+    const guess = body.guess
+    if (isBlank(code)){
+        res.status(400).send(packError("Missing code parameter"))
+        return;
+    }
+    if (isBlank(username)){
+        res.status(400).send(packError("Missing username parameter"))
+        return;
+    }
+    if (isBlank(guess)){
+        res.status(400).send(packError("Missing guess parameter"))
+        return;
+    }
+    if (wordLookupTable[guess] === undefined) {
+        res.status(404).send(packError("Unknown word"))
+        return;
+    }
+    if (guess.length != 5) {
+        res.send(400).send(packError("Guess is wrong length"))
+        return
+    }
 
+    const room = getRoom(code)
+    if (room === undefined) {
+        res.status(500).send(packError("room is undefined"))
+        return;
+    }
+    const challangeWord = getChallangeWord(room, username)
+    if (challangeWord === undefined) {
+        res.status(500).send(packError("challangeWord is undefined"))
+        return;
+    }
+
+    if (room.times[username].startTime === undefined) {
+        room.times[username].startTime === Date.now()
+    }
+    const pattern = evaluate(guess, challangeWord)
+    
+    bankPattern(pattern, guess, room, username)
+    const guessCount = room.states[username].length
+    if (winningPattern(pattern)) {
+        if (room.winner === undefined) room.winner = username
+        room.times[username].endTime === Date.now()
+    }
+    if (guessCount === 6) {
+        room.times[username].endTime === Date.now()
+    }
+    if (gameOver(room)){
+        room.status === "over"
+    }
+    console.log(room.states[username])
+    res.send(JSON.stringify({pattern: pattern, count: guessCount}))
 });
 
 app.get("/get-opponent-state", (req, res) => {
-    res.send("Unimplemented Endpoint")
+    const query = req.query
+    if (isEmpty(query)) {
+        res.status(400).send(packError("Missing query"))
+        return;
+    }
+    const username = query.username
+    const code = query.code
+    if (isBlank(username)){
+        res.status(400).send(packError("Missing username parameter"))
+        return;
+    }
+    if (isBlank(code)){
+        res.status(400).send(packError("Missing code parameter"))
+        return;
+    }
+    const room = getRoom(code)
+    if (room === undefined) 
+        res.status(404).send(packError("Unknown room code"))
+    else {
+        const opponent = getOpponent(room, username)
 
+        console.log(opponent)
+    
+        const opponentState = room.states[opponent]
+        
+        if (opponentState !== undefined)
+            res.send(JSON.stringify(opponentState))
+        else
+            res.status(404).send(packError("Count not find opponent state"))
+    }  
 })
 
 app.get("/get-challange-word", (req, res) => {
-    res.send("Unimplemented Endpoint")
+    const query = req.query
+    if (isEmpty(query)) {
+        res.status(400).send(packError("Missing query"))
+        return;
+    }
+    const code = query.code
+    const username = query.username
+    if (isBlank(username)) {
+        res.status(400).send(packError("Missing username parameter"))
+        return;
+    }
+    if (isBlank(code)) {
+        res.status(400).send(packError("Missing code parameter"))
+        return;
+    }
 
+    const room = getRoom(code)
+    if (room === undefined) 
+        res.status(404).send(packError("Unknown room code"))
+    else {
+        const opponent = getOpponent(room, username)
+
+        const challangeWord = getChallangeWord(room, username)
+        res.send(JSON.stringify({word: challangeWord}))
+    }
 });
 
 /*# End Game Page #*/
 
 /**** END ENDPOINTS ****/
 
-const server = app.listen(3000, () => {
-    const host = server.address().address;
-    const port = server.address().port;
-    console.log("WordDuel running at http://%s:%s", host, port);
-})
+
+module.exports = app
