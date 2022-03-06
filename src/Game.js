@@ -52,6 +52,7 @@ function ChangingColorTextField(props) {
     const [col, setCol] = React.useState(0)
     const BACKSPACE = 8;
     const ENTER = 13;
+    const [ typed, setTyped ] = React.useState([])
     function isLetter(str) {
         return str.length === 1 && str.match(/[a-z]/i);
     }
@@ -61,20 +62,46 @@ function ChangingColorTextField(props) {
             if (col > 0) {
                 handle(" ", row, col-1);
                 setCol(col-1);
+                typed.pop()
+                setTyped([...typed])
             }
         } else if (code === ENTER) {
             if (col === 5 && row <= 5) {
-                setRow(row + 1)
-                setCol(0)
+                const guess = typed.reduce((current, accu) => current += accu, "")
+                console.log(guess)
+                fetch(process.env.REACT_APP_BACKEND_URL + "/guess-word", {
+                    method: "POST",
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                      guess: guess.toLowerCase(),
+                      code: localStorage.getItem("code"),
+                      username: localStorage.getItem("username")
+                    })
+                }).then(res => res.json().then(json => {
+                    if (res.status === 200) {
+                        const pattern = json.pattern
+                        console.log(pattern)
+                        setTyped([])
+                        setRow(row + 1)
+                        setCol(0)
+                    } else if (res.status === 404) {
+                        console.log(json.error)
+                        alert("Unknown Word")
+                    }
+                }))
+                
+               
             }
         } else if (isLetter(String.fromCharCode(code))) {
             if (col  <= 4 && row <=5) {
                 handle(String.fromCharCode(code), row, col)
+                setTyped([...typed, String.fromCharCode(code)])
+                typed.push(String.fromCharCode(code))
                 setCol(col+1)
             }
         }
-    }, [row, col])
-    console.log(col)
+    }, [row, col, typed])
+    console.log(typed)
 
     return (
         <div>
