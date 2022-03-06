@@ -2,11 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import Welcome from './Welcome';
+import Selection from './Selection';
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Welcome />
+    <Selection />
   </React.StrictMode>,
   document.getElementById('root')
 );
