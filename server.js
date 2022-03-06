@@ -124,7 +124,6 @@ const generateStats = (room, username) => {
     return ({
         guesses: room.states[username],
         duration: times.endTime - times.startTime
-
     })
 }
 
@@ -378,6 +377,35 @@ app.post("/submit-word-selection", (req, res) => {
 
 /*# Start Game Page #*/
 
+app.post("/start-timer", (req, res) => {
+    const body = req.body
+    if (isEmpty(body)) {
+        res.status(400).send(packError("Missing body"))
+        return;
+    }
+    const code = body.code
+    const username = body.username
+    if (isBlank(code)){
+        res.status(400).send(packError("Missing code parameter"))
+        return;
+    }
+    if (isBlank(username)){
+        res.status(400).send(packError("Missing username parameter"))
+        return;
+    }
+    const room = getRoom(code)
+    if (room === undefined) {
+        res.status(500).send(packError("room is undefined"))
+        return;
+    }
+    if (room.times[username].startTime !== undefined) {
+        res.status(400).send(packError("startTime already set"))
+        return;
+    }
+    room.times[username].startTime = Date.now()
+    res.send({status: "success"})
+})
+
 app.post("/guess-word", (req, res) => {
     const body = req.body;
     if (isEmpty(body)) {
@@ -417,10 +445,6 @@ app.post("/guess-word", (req, res) => {
     if (challangeWord === undefined) {
         res.status(500).send(packError("challangeWord is undefined"))
         return;
-    }
-
-    if (room.times[username].startTime === undefined) {
-        room.times[username].startTime === Date.now()
     }
     const pattern = evaluate(guess, challangeWord)
     
