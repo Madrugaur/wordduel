@@ -8,6 +8,20 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import './Dashboard.css';
 
 function ListRooms(props) {
+    const [ allRooms, setRooms ] = React.useState([])
+    const [ filteredRooms, setFilteredRooms ] = React.useState([])
+    React.useEffect(() => {
+        setInterval(() => {
+            fetch(process.env.REACT_APP_BACKEND_URL + "/open-rooms", {
+                method: "GET",
+                mode: "cors"
+            }).then(res => res.json())
+            .then(result => {
+                console.log(result)
+            }).catch(error => console.log(error))
+        }, 5000)
+    })
+    
     return (
             <>
                 <List>
