@@ -16,8 +16,9 @@ import { useNavigate } from "react-router";
 
 function Waiting() {
   const showShare = false;
-  const wordSubmitted = localStorage.getItem("wordsubmitted");
-
+  const wordSubmitted = localStorage.getItem("wordSubmitted");
+  console.log("wordSubmitted")
+  console.log(wordSubmitted)
   const shareLinkComp = () => (
     <>
       <div className="link">
@@ -45,13 +46,13 @@ function Waiting() {
         method: "GET"
       }).then(res => res.json())
       .then(json => {
-        if (json.status === "word-selection")
+        if (json.status === "word-selection" && wordSubmitted === null)
           navigate("/selection")
         else if (json.status === "ready")
           navigate("/game")
       })
-    }, 1000)
-  }, [])
+    }, 2500)
+  }, [wordSubmitted])
 
   return (
     <>
@@ -61,7 +62,7 @@ function Waiting() {
         </Helmet>
         <div className="Word-Duel-Title">Word Duel</div>
         <Loading type={"spin"} color={"#FFFFFF"}/>
-        {wordSubmitted === undefined ? <p>Waiting for Opponent</p> : wordSubmit()}
+        {wordSubmitted === null ? <p>Waiting for Opponent</p> : wordSubmit()}
       </div>
     </>
   );

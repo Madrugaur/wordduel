@@ -63,12 +63,12 @@ function ChangingColorTextField(props) {
                 setCol(col-1);
             }
         } else if (code === ENTER) {
-            if (col === 5) {
+            if (col === 5 && row <= 5) {
                 setRow(row + 1)
                 setCol(0)
             }
         } else if (isLetter(String.fromCharCode(code))) {
-            if (col  <= 4) {
+            if (col  <= 4 && row <=5) {
                 handle(String.fromCharCode(code), row, col)
                 setCol(col+1)
             }
