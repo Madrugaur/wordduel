@@ -1,0 +1,46 @@
+.Selection {
+    border: 2px solid white;
+    margin-top: 1em;
+    width: 630px;
+    margin-left: auto;
+    margin-right: auto;
+    color: white;
+    padding-top: 3.5em;
+    padding-bottom: 3.5em;
+}
+
+.Word-Duel {
+    text-align: center;
+    padding-top: 1em;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 72px;
+    line-height: 84px;
+    color: #FFFFFF;
+    padding-bottom: .5em;
+}
+
+.form {
+    width: 350px;
+    margin: auto;
+}
+
+.text button {
+    margin-left: 20px;
+}
+
+.beginText {
+    width: 350px;
+    margin: auto;
+}
+
+.title {
+    font-weight: bold;
+    padding-bottom: 1em;
+    font-size: 24px;
+}
+
+.submitBtn {
+    margin-top: 3em;
+}

@@ -1,0 +1,62 @@
+.Word-Duel {
+    text-align: center;
+    padding-top: 1em;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 72px;
+    line-height: 84px;
+    color: #FFFFFF;
+}
+
+.Create-Room{
+    text-align: center;
+    padding-top: 2em;
+}
+
+.Create-Room button {
+    width: 200px;
+    background-color: white;
+    color:black;
+}
+
+.Create-Room button:hover {
+    background-color: white;
+    color:black;
+}
+
+.Join-Room{
+    font-family: Roboto;
+    font-style: normal;
+    text-align: center;
+    color: #FFFFFF;
+    padding-top: 1.5em;
+    font-size: 28px;
+}
+
+.Search-Bar{
+    text-align: center;
+    padding-top: 1.5em;
+}
+
+.List{
+    margin: 0 auto;
+    justify-content: space-between;
+    color: black;
+    text-align: center;
+    padding-top: 1em;
+    width: 300px;
+}
+
+#outlined-required-label{
+    color: #FFFFFF;
+}
+
+#outlined-required{
+    color: #FFFFFF;
+}
+#MuiOutlinedInput-notchedOutline{
+    color: #FFFFFF;
+}
+
+

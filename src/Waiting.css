@@ -1,0 +1,36 @@
+.Word-Duel-Title {
+    text-align: center;
+    padding-top: 1em;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 72px;
+    line-height: 84px;
+    color: #FFFFFF;
+}
+
+.link {
+    color: white;
+    width: 250px;
+    margin: auto;
+}
+
+.wordSubmit {
+    color: white;
+    text-align:center;
+}
+
+.share{
+    text-align: center;
+}
+
+.share button {
+    width: 100px;
+    background-color: white;
+    color:black;
+}
+
+.share button:hover {
+    background-color: white;
+    color:black;
+}
