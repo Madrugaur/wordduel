@@ -1,0 +1,14 @@
+.Word-Duel{
+    padding-top: .25em;
+}
+.Table-Grid{
+    margin: auto;
+    color:white;
+    width: 400px;
+}
+td{
+    text-align: center;
+    width: 100px;
+    font-size: 50px;
+    border: 2px solid white;
+}

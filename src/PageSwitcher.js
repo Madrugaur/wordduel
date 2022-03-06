@@ -5,6 +5,7 @@ import Waiting from "./Waiting"
 import Selection from "./Selection"
 import { Navigate } from 'react-router-dom';
 import Dashboard from './Dashboard';
+import Game from './Game';
 export default function PageSwitcher() {
   return (
     <BrowserRouter>
@@ -14,6 +15,7 @@ export default function PageSwitcher() {
             <Route exact path="/waiting" element={<Waiting/>}/>
             <Route exact path="/dashboard" element={<Dashboard/>}/>
             <Route exact path="/selection" element={<Selection/>}/>
+            <Route exact path="/game" element={<Game/>}/>
         </Routes>
     </BrowserRouter>
   );
