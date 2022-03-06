@@ -1,13 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Welcome from './Welcome';
-import Selection from './Selection';
-import Dashboard from './Dashboard';
 import PageSwitcher from './PageSwitcher';
 import reportWebVitals from './reportWebVitals';
-import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
-// import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
@@ -29,7 +25,7 @@ const theme = createTheme({
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-     <PageSwitcher/>
+    <PageSwitcher/>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')

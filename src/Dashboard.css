@@ -40,8 +40,12 @@
 }
 
 .List{
+    margin: 0 auto;
+    justify-content: space-between;
+    color: black;
     text-align: center;
-    color: #FFFFFF;
+    padding-top: 1em;
+    width: 300px;
 }
 
 #outlined-required-label{
