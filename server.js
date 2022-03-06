@@ -20,12 +20,15 @@ function Room(name, private, owner) {
     this.states = {
         [owner]: []
     }
-    this.times = {}
+    this.times = {
+        [owner]: {
+            startTime: undefined,
+            endTime: undefined
+        }
+    }
     this.wordSelection = {}
     this.code = uuid()
     this.status = "open"
-    this.startTime = undefined
-    this.endTime = undefined
     this.winner = undefined
 }
 
@@ -49,7 +52,7 @@ const rooms = testRooms
 /**** HELPER FUNCTIONS ****/
 
 const packError = (err) => {
-    return JSON.stringify({error: err})
+    return ({error: err})
 }
 
 const isEmpty = (obj) => {
@@ -116,6 +119,15 @@ const gameOver = (room) => {
     return p1Done && p2Done
 }
 
+const generateStats = (room, username) => {
+    const times = room.times[username]
+    return ({
+        guesses: room.states[username],
+        duration: times.endTime - times.startTime
+
+    })
+}
+
 /**** START ENDPOINTS ****/
 
 /*# Start Welcome Page #*/
@@ -132,7 +144,7 @@ app.post("/new-player", (req, res) => {
         res.status(400).send(packError("Body missing"))
         return
     }
-    const playerName = body["player-name"]
+    const playerName = body["name"]
     if ( isBlank(playerName) )  {
         res.status(400).send(packError("Missing player-name"))
         return;
@@ -143,8 +155,7 @@ app.post("/new-player", (req, res) => {
         return
     }    
     players.add(playerName)
-
-    res.send(playerName)
+    res.send(({status: "sucess"}))
 });
 
 app.post("/remove-player", (req, res) => {
@@ -165,7 +176,7 @@ app.post("/remove-player", (req, res) => {
     
     players.delete(playerName)
 
-    res.send(playerName)
+    res.send({status: "sucess"})
 })
 
 /*# End Welcome Page #*/
@@ -183,7 +194,7 @@ app.get("/open-rooms", (req, res) => {
     .filter(room => (!room.private))
     .filter(room => (room.status === "open"))
     .map(room => ({code: room.code, name: room.name}))
-    res.send(JSON.stringify(filteredRooms))
+    res.send((filteredRooms))
 });
 
 app.post("/join-room", (req, res) => {
@@ -210,9 +221,12 @@ app.post("/join-room", (req, res) => {
     }    
     room.players.push(username)
     room.states[username] = []
+    room.times[username] = {
+        startTime: undefined,
+        endTime: undefined
+    }
     room.status = "word-selection"
-    res.send(JSON.stringify({status: "Sucess"}))
-    console.log(room)
+    res.send(({status: "Sucess"}))
 })
 
 
@@ -227,6 +241,30 @@ app.post("/join-room", (req, res) => {
  * @response 
 */
 app.get("/get-game-results", (req, res) => {
+    const query = req.query
+    if (isEmpty(query)) {
+        res.status(400).send(packError("Missing query"))
+        return;
+    }
+    const code = query.code
+    if (isBlank(code)) {
+        res.status(400).send(packError("Missing code parameter"))
+        return;
+    }
+    const room = getRoom(code)
+    if (room === undefined) {
+        res.status(404).send(packError("Unknown room code"))
+        return;
+    }
+    const p1 = room.players[0]
+    const p2 = room.players[1]
+    const results = {
+        winner: room.winner,
+        stats: {
+            [p1]: generateStats(room, p1),
+            [p2]: generateStats(room, p2)
+        }
+    }
     res.send("Unimplemented Endpoint")
 });
 
@@ -262,7 +300,7 @@ app.post("/create-room", (req, res) => {
     const newRoom = new Room(name, private, username)
 
     rooms[newRoom.code] = newRoom
-    res.send(JSON.stringify({ status: "Sucess" }))
+    res.send(({ status: "Sucess" }))
 });
 
 
@@ -287,7 +325,7 @@ app.get("/room-status", (req, res) => {
     if (room === undefined)
         res.status(404).send(packError("Unknown room code"))
     else
-        res.send(JSON.stringify({ "status": room.status }))
+        res.send(({ status: room.status }))
 });
 
 /*# End Waiting Page #*/
@@ -325,16 +363,15 @@ app.post("/submit-word-selection", (req, res) => {
         res.status(400).send(packError("User not in room"))
     else {
         if (wordLookupTable[word] === undefined)
-            res.send(JSON.stringify({accepted: false}))
+            res.send(({accepted: false}))
         else {
             room.wordSelection[username] = word
             if (roomReady(room)) {
                 room.status = 'ready'
             }
-            res.send(JSON.stringify({accepted: true}))
+            res.send(({accepted: true}))
         }
     }
-    console.log(room)
 });
 
 /*# End Word Selection Page #*/
@@ -399,8 +436,7 @@ app.post("/guess-word", (req, res) => {
     if (gameOver(room)){
         room.status === "over"
     }
-    console.log(room.states[username])
-    res.send(JSON.stringify({pattern: pattern, count: guessCount}))
+    res.send(({pattern: pattern, count: guessCount}))
 });
 
 app.get("/get-opponent-state", (req, res) => {
@@ -430,7 +466,7 @@ app.get("/get-opponent-state", (req, res) => {
         const opponentState = room.states[opponent]
         
         if (opponentState !== undefined)
-            res.send(JSON.stringify(opponentState))
+            res.send((opponentState))
         else
             res.status(404).send(packError("Count not find opponent state"))
     }  
@@ -460,7 +496,7 @@ app.get("/get-challange-word", (req, res) => {
         const opponent = getOpponent(room, username)
 
         const challangeWord = getChallangeWord(room, username)
-        res.send(JSON.stringify({word: challangeWord}))
+        res.send(({word: challangeWord}))
     }
 });
 
