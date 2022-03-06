@@ -14,12 +14,9 @@
     "react-bootstrap": "^2.2.0",
     "react-dom": "^17.0.2",
     "react-helmet": "^6.1.0",
-<<<<<<< HEAD
     "react-loader-spinner": "^6.0.0-0",
-=======
     "react-modal": "^3.14.4",
     "react-router-dom": "^6.2.2",
->>>>>>> f03f1e98bf25efcad583f7f20a118249b304fff9
     "react-scripts": "5.0.0",
     "web-vitals": "^2.1.4"
   },
