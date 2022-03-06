@@ -8,6 +8,8 @@ import Modal from '@mui/material/Modal';
 import ShareIcon from '@mui/icons-material/Share';
 import { IconButton } from '@mui/material';
 
+
+
 function Waiting() {
     const showShare = true;
     const showWordSubmit = false;
@@ -47,7 +49,8 @@ function Waiting() {
 
       { showShare ? shareLinkComp() : <></> }
       { showWordSubmit ? wordSubmit() : <></> }
-    
+
+      <p class="waitingOpp">Waiting for opponent...</p>
     </div>
     </>
   );
@@ -61,6 +64,7 @@ function CreateShareModal() {
     return (
       <div>
         <IconButton onClick={handleOpen}>
+          <span class="copyLink">COPY LINK</span>
           <ShareIcon/>
         </IconButton>
         
@@ -89,6 +93,7 @@ function CreateShareModal() {
       </div>
     );
 };
+
 
 const ModalStyle = {
     position: 'absolute',
