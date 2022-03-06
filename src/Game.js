@@ -58,6 +58,7 @@ function ChangingColorTextField(props) {
     function handleKeyPress(e) {
         var key = e.key;
         console.log(key)
+        console.log(e.keyCode)
         if(column === 5){
             row++;
             column = 0;
@@ -66,7 +67,7 @@ function ChangingColorTextField(props) {
             //catch exception
         }
         column++;
-        if (key === "bspace") {
+        if (e.keyCode === 8) {
             column--;
             handleD(key,row,column)
         }
@@ -76,7 +77,7 @@ function ChangingColorTextField(props) {
 
     return (
         <div>
-            <input id="input" type="text" onKeyPress={(e) => handleKeyPress(e)}  />
+            <input id="input" type="text" onKeyDown={(e) => handleKeyPress(e)}  />
         </div>
     )
 }
