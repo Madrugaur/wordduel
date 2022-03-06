@@ -1,6 +1,6 @@
 const app = require("./server");
-require("dotnet").consfig()
+require("dotenv").config()
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
-    console.log("WordDuel running at 3000");
+    console.log("WordDuel running at " + PORT);
 })
