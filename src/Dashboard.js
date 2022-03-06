@@ -93,13 +93,15 @@ function CreateRoomModal() {
       fetch(process.env.REACT_APP_BACKEND_URL + "/create-room", {
         method: "POST",
         headers: {'Content-Type': 'application/json'},
-        body: {
+        body: JSON.stringify({
           private: private_,
           name: name,
           username: localStorage.getItem("username")
-        }
+        })
+      }).then(res => res.json())
+      .then(json => {
+        console.log(json)
       })
-      navigate('/waiting');
     })
     return (
       <div>
