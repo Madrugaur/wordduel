@@ -3,6 +3,7 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import { useNavigate } from "react-router";
 
 function Selection() {
   const [selection, setSelection] = React.useState("")
@@ -10,8 +11,9 @@ function Selection() {
     if (event.target.value === undefined) setSelection("")
     else setSelection(event.target.value)
   }, [selection])
+  const navigate = useNavigate()
   const handleSubmit = React.useCallback((e) => {
-    fetch(process.env.REACT_APP_BACKEND_URL, {
+    fetch(process.env.REACT_APP_BACKEND_URL + "/submit-word-selection", {
       method: "POST",
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({
@@ -21,7 +23,10 @@ function Selection() {
       })
     }).then(res => res.json())
     .then(json => {
-      
+        if (json.accepted === true) {
+          localStorage.setItem("wordSubmitted", selection)
+          navigate("/waiting")
+        }
     })
   }, [selection]);
   return (

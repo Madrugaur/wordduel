@@ -61,7 +61,7 @@ function Waiting() {
         </Helmet>
         <div className="Word-Duel-Title">Word Duel</div>
         <Loading type={"spin"} color={"#FFFFFF"}/>
-        {wordSubmitted === undefined ? <p>Waiting for Opponent</p> : <p>{"Submitted: " + wordSubmitted}</p>}
+        {wordSubmitted === undefined ? <p>Waiting for Opponent</p> : wordSubmit()}
       </div>
     </>
   );
