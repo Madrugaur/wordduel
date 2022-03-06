@@ -11,6 +11,8 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 
+
+
 function Waiting() {
   const showShare = false;
   const wordSubmitted = localStorage.getItem("wordsubmitted");
@@ -117,6 +119,7 @@ function RadioButtonsGroup() {
     </FormControl>
   );
 }
+
 
 const ModalStyle = {
   position: "absolute",
