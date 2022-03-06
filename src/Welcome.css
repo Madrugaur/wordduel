@@ -28,11 +28,19 @@
   margin-top: 1em;
 }
 
-#outlined-required {
+#outlined-helperText {
   color: #FFFFFF;
 }
 
-#outlined-required-label {
+#outlined-helperText-label {
   color: #FFFFFF;
 }
+
+/* .filled-size-small {
+  color:
+} */
+
+/* .text {
+  background-color: white;
+} */
 

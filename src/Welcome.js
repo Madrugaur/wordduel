@@ -3,6 +3,7 @@ import React from 'react';
 import {Helmet} from 'react-helmet';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { purple } from '@mui/material/colors';
 
 
 function Welcome() {
@@ -52,10 +53,12 @@ class NameForm extends React.Component {
       <div class ="form">
         <div class="text">
         <TextField
-          id="outlined-required"
-          label="Username"
-          placeholder="Enter username..."
-         
+          id="outlined-helperText"
+          label="Helper text"
+          placeholder="Default Value"
+          helperText="Some important text"
+          color="secondary"
+          focused
         />
         </div>
         <div class="submitBtn">

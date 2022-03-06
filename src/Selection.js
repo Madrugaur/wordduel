@@ -9,13 +9,20 @@ function Selection() {
   return (
     
     <>
-    <div className="Welcome">
-      <Helmet>
+    <Helmet>
         <style>{'body { background-color: black; }'}</style>
       </Helmet>
-      Welcome to Word Duel!
+    <div className='Word-Duel'>
+            Word Duel
     </div>
-    <div>
+    <div className="Selection">
+    <div className="beginText">
+        <p className="title">Word Selection</p>
+        <p>Enter a five letter word:</p>
+    </div>
+
+      
+      
       <NameForm />
     </div>
 
@@ -37,16 +44,17 @@ class NameForm extends React.Component {
 
   render() {
     return (
-      <div class ="form">
-        <div class="text">
+      <div className ="form">
+        <div className="text">
         <TextField
           id="outlined-required"
-          label="Username"
-          placeholder="Enter username..."
+          label=""
+          placeholder="Type here..."
          
         />
+        <Button className="randomBtn" variant="contained">RANDOMIZE</Button>
         </div>
-        <div class="submitBtn">
+        <div className="submitBtn">
         <Button variant="contained">SUBMIT</Button>
         </div>
         
