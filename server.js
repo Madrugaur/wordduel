@@ -282,6 +282,10 @@ app.get("/get-game-results", (req, res) => {
 /*# Start Room Config Page #*/
 
 app.post("/create-room", (req, res) => {
+    res.setHeader('Access-Control-Allow-Origin', "*");
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
     const body = req.body;
     if (isEmpty(body)) {
         res.status(400).send(packError("Missing body"))
