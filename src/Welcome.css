@@ -16,7 +16,7 @@
   margin: auto;
 }
 
-.form {
+.form2 {
   margin-top: 3em;
   margin-bottom:3em;
   width: 200px;
@@ -24,8 +24,8 @@
   margin-left: auto;
 }
 
-.submitBtn {
-  margin-top: 1em;
+.submitBtn2 {
+  margin-bottom: 3.5em;
 }
 
 #outlined-helperText {
@@ -36,11 +36,8 @@
   color: #FFFFFF;
 }
 
-/* .filled-size-small {
-  color:
-} */
-
-/* .text {
-  background-color: white;
-} */
+.text2 {
+  color: white;
+  margin-top: 5em;
+}
 

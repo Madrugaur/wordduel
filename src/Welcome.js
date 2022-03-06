@@ -37,7 +37,7 @@ function Welcome() {
 function SubmitBtn() {
   const navigate = useNavigate();
   return(
-    <div class="submitBtn">
+    <div class="submitBtn2">
           <Button onClick={() => {navigate('/dashboard');}} variant="contained">SUBMIT</Button>
     </div>
   );
@@ -62,12 +62,12 @@ class NameForm extends React.Component {
   }
   render() {
     return (
-      <div class ="form">
-        <div class="text">
+      <div class ="form2">
+        <div class="text2">
         <TextField
           id="outlined-helperText"
-          label="Helper text"
-          placeholder="Default Value"
+          label="Username"
+          placeholder="Enter username..."
           helperText="Some important text"
           color="secondary"
           focused
