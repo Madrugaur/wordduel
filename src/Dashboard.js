@@ -19,7 +19,21 @@ function Dashboard() {
   const [ filteredRooms, setFilteredRooms ] = React.useState([])
   const [ filter, setFilter ] = React.useState(undefined)
   const joinRoom = React.useCallback((code) => {
-      console.log(code)
+    fetch(process.env.REACT_APP_BACKEND_URL + "/join-room", {
+      method: "POST",
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        code: code,
+        username: localStorage.getItem("username")
+      })
+    }).then(res => res.json())
+    .then(json => {
+      if (json.status === "Sucess") {
+        
+        navigate("/waiting")
+      }
+    })
+
   })
 
   const handleSearchBarChange = React.useCallback((event) => {
