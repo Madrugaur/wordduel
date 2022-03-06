@@ -313,7 +313,7 @@ app.post("/create-room", (req, res) => {
     const newRoom = new Room(name, private, username)
 
     rooms[newRoom.code] = newRoom
-    res.send(({ status: "Sucess" }))
+    res.send(({ status: "Sucess", code: newRoom.code }))
 });
 
 
