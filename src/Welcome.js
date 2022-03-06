@@ -8,9 +8,28 @@ import { useNavigate } from 'react-router-dom';
 
 
 function Welcome() {
+  const [username, setUsername] = React.useState(undefined)
+  const handleSubmit = () => {
+    fetch(process.env.REACT_APP_BACKEND_URL + "/new-player", {
+      method: "POST",
+      body: {
+        name: username
+      }
+    }).then(res => res.json())
+    .then(json => {
+      console.log(json)
+      if (json.status === "Sucess"){
+        localStorage.setItem("username", username)
+      } else {
+        alert(username + " is already taken")
+      }
+    })
+  }
+  const handleNameChange = React.useCallback((event) => {
+    setUsername(event.target.value)
+  })
   return (
     <>
-    
     <div className="Welcome">
       <Helmet>
         <style>{'body { background-color: black; }'}</style>
@@ -18,7 +37,7 @@ function Welcome() {
       Welcome to Word Duel!
     </div>
     <div>
-      <NameForm />
+      <NameForm handleNameChange={handleNameChange} handleSubmit={handleSubmit}/>
     </div>
     <div className="play">
       <p>How to Play:</p>
@@ -43,43 +62,25 @@ function SubmitBtn(props) {
   );
 }
 
-class NameForm extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.state = {value: ''};
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    
-  }
-  
-
-  handleChange(event) {    
-    this.setState({ value: event.target.value }); 
-  }
-  handleSubmit(event) { 
-    console.log(this.state.value)
-  }
-  render() {
-    return (
-      <div class ="form2">
-        <div class="text2">
-        <TextField
-          id="outlined-helperText"
-          label="Username"
-          placeholder="Enter username..."
-          helperText="Some important text"
-          color="secondary"
-          focused
-        />
-        </div>
-        <SubmitBtn/>
-        
-
+function NameForm(props) {
+  const { handleNameChange, handleSubmit } = props;
+  return (
+    <div class ="form2">
+      <div class="text2">
+      <TextField
+        id="outlined-helperText"
+        label="Username"
+        placeholder="Enter username..."
+        helperText="Some important text"
+        color="secondary"
+        focused
+        onChange={handleNameChange}
+      />
       </div>
-      
-    );
-  }
+      <SubmitBtn handleSubmit={handleSubmit}/>
+    </div>
+    
+  );
 }
 
 export default Welcome;
