@@ -11,6 +11,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import Loading from "./Loading"
+import { useNavigate } from "react-router";
 
 
 function Waiting() {
@@ -36,6 +37,21 @@ function Waiting() {
       </div>
     </>
   );
+  const navigate = useNavigate()
+
+  React.useEffect(() => {
+    setInterval(() => {
+      fetch(process.env.REACT_APP_BACKEND_URL + "/room-status?code="+localStorage.getItem("code"), {
+        method: "GET"
+      }).then(res => res.json())
+      .then(json => {
+        if (json.status === "word-selection")
+          navigate("/selection")
+        else if (json.status === "ready")
+          navigate("/game")
+      })
+    }, 1000)
+  }, [])
 
   return (
     <>

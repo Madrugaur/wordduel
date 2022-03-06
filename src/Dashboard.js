@@ -30,7 +30,7 @@ function Dashboard() {
     }).then(res => res.json())
     .then(json => {
       if (json.status === "Sucess") {
-
+        localStorage.setItem("code", code)
         navigate("/waiting")
       }
     })
