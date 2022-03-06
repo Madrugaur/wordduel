@@ -5,16 +5,19 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import LaunchIcon from '@mui/icons-material/Launch';
+import Loading from "./Loading"
 import './Dashboard.css';
-
+import "./ListRooms.css"
 function ListRooms(props) {
+   
     return (
-            <>
+            <> 
+            {
                 <List>
-                    {DUMMYJSON.map((item) => (
-                        <ListItem key={item.id}> 
-                            <ListItemButton className='List'sx={[ {bgcolor:'gray'},{'&:hover': {backgroundColor: 'gray', }}]} onClick={() => {console.log("Hello")}}>
-                             {item.text} 
+                    {props.list.map((item, i) => (
+                        <ListItem key={i}> 
+                            <ListItemButton className='List'sx={[ {bgcolor:'gray'},{'&:hover': {backgroundColor: 'gray', }}]} onClick={() => props.joinRoom(item.code)}>
+                             {item.name} 
                             <ListItemIcon>
                                 <div style={{position:'absolute',right:'5px',top:'5px'}}>
                                     <LaunchIcon />   
@@ -24,9 +27,10 @@ function ListRooms(props) {
                         </ListItem>
                     ))}
                 </List>
-                </>
-                );
             }
+            </>
+        );
+    }
 
 export default ListRooms
           

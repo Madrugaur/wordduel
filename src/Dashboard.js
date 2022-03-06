@@ -1,5 +1,5 @@
 import './Dashboard.css';
-import React from 'react';
+import React, { useReducer } from 'react';
 import TextField from "@mui/material/TextField";
 import List from "./ListRooms";
 import Box from '@mui/material/Box';
@@ -12,9 +12,37 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import { useNavigate } from 'react-router-dom';
-
+import Loading from './Loading';
 
 function Dashboard() {
+  const [ allRooms, setRooms ] = React.useState([])
+  const [ filteredRooms, setFilteredRooms ] = React.useState([])
+  const [ filter, setFilter ] = React.useState(undefined)
+  const joinRoom = React.useCallback((code) => {
+      console.log(code)
+  })
+
+  const handleSearchBarChange = React.useCallback((event) => {
+    setFilter(event.target.value)
+  })
+
+  React.useEffect(() => 
+    setFilteredRooms(filter === undefined ? allRooms : allRooms.filter(room => 
+        room.name.startsWith(filter))), [allRooms, filter])
+
+  React.useEffect(() => {
+      const updateRooms = () => {
+          fetch(process.env.REACT_APP_BACKEND_URL + "/open-rooms", {
+              method: "GET",
+              mode: "cors"
+          }).then(res => res.json())
+          .then(result => {
+              setRooms(result)
+          }).catch(error => console.log(error))
+      }
+      setInterval(() => updateRooms(), 5000)
+  }, [])
+  
   return (
     <>
         <Helmet>
@@ -39,10 +67,11 @@ function Dashboard() {
             placeholder='Search...'
             color="secondary"
             focused
+            onChange={(event) => handleSearchBarChange(event)}
             />
         </div>
         <div className="List">
-            <List/>
+            { allRooms.length === 0 ? <Loading type={"spin"} color={"#FFFFFF"}/> : <List list={filteredRooms} joinRoom={joinRoom}/>}
         </div>
         
     </>
