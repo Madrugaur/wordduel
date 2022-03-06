@@ -6,11 +6,11 @@ import Selection from './Selection';
 import Dashboard from './Dashboard';
 
 import reportWebVitals from './reportWebVitals';
+import PageSwitcher from './PageSwitcher';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Selection /> 
-    <Dashboard />
+    <PageSwitcher/>
   </React.StrictMode>,
   document.getElementById('root')
 );
