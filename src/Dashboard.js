@@ -73,6 +73,8 @@ function CreateRoomModal() {
                 variant="outlined"
                 label="Room Name"
                 placeholder='Name...'
+                color="secondary"
+                focused
                 />
                 <RadioButtonsGroup/>
             </Typography>
@@ -92,8 +94,8 @@ function RadioButtonsGroup() {
           defaultValue="public"
           name="radio-buttons-group"
         >
-          <FormControlLabel sx={{ color:'white' }}value="public" control={<Radio />} label="Public" />
-          <FormControlLabel sx={{ color:'white' }}value="private" control={<Radio />} label="Private" />
+          <FormControlLabel sx={{ color:'white',paddingLeft:4 }}value="public" control={<Radio />} label="Public" />
+          <FormControlLabel sx={{ color:'white',paddingLeft:4 }}value="private" control={<Radio />} label="Private" />
         </RadioGroup>
       </FormControl>
     );
