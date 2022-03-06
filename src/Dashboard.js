@@ -1,7 +1,7 @@
 import './Dashboard.css';
-import * as React from 'react';
+import React from 'react';
 import TextField from "@mui/material/TextField";
-import List from "./List";
+import List from "./ListRooms";
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -11,7 +11,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import { palette } from '@mui/system';
+import { useNavigate } from 'react-router-dom';
 
 
 function Dashboard() {
@@ -37,6 +37,8 @@ function Dashboard() {
             variant="outlined"
             label="Search"
             placeholder='Search...'
+            color="secondary"
+            focused
             />
         </div>
         <div className="List">
@@ -51,7 +53,7 @@ function CreateRoomModal() {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-  
+    const navigate = useNavigate();
     return (
       <div>
         <Button onClick={handleOpen}>CREATE ROOM</Button>
@@ -74,7 +76,7 @@ function CreateRoomModal() {
                 />
                 <RadioButtonsGroup/>
             </Typography>
-            <Button sx={{ color:'white' }} onClick={handleClose}>CREATE</Button>
+            <Button sx={{ color:'white' }} onClick={() => {navigate('/waiting');}}>CREATE</Button>
             <Button sx={{ color:'white' }} onClick={handleClose}>CANCEL</Button>
           </Box>
         </Modal>

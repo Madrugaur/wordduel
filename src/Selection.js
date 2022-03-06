@@ -47,12 +47,13 @@ class NameForm extends React.Component {
     return (
       <div className ="form">
         <div className="text">
-        <TextField
-          id="outlined-required"
-          label=""
-          placeholder="Type here..."
-         
-        />
+          <TextField
+            id="outlined-required"
+            label=""
+            placeholder="Type here..."
+            color="secondary"
+            focused
+          />
         <Button className="randomBtn" variant="contained">RANDOMIZE</Button>
         </div>
         <div className="submitBtn">
