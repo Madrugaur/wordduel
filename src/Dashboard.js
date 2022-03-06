@@ -80,9 +80,26 @@ function Dashboard() {
 
 function CreateRoomModal() {
     const [open, setOpen] = React.useState(false);
+    const [ private_, setPrivate ] = React.useState(false)
+    const [ name, setName ] = React.useState("")
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const navigate = useNavigate();
+    const handleNameChange = React.useCallback((event) =>{
+      if (event.target.value === undefined) setName("WordDuel Room")
+      else setName(event.target.value)
+    },[])
+    const handleCreateRoom = React.useCallback(() => {
+      fetch(process.env.REACT_APP_BACKEND_URL + "/create-room", {
+        method: "POST",
+        body: {
+          private: private_,
+          name: name,
+          username: "bob"
+        }
+      })
+      navigate('/waiting');
+    })
     return (
       <div>
         <Button onClick={handleOpen}>CREATE ROOM</Button>
@@ -104,10 +121,11 @@ function CreateRoomModal() {
                 placeholder='Name...'
                 color="secondary"
                 focused
+                onChange={(event) => handleNameChange(event)}
                 />
                 <RadioButtonsGroup/>
             </Typography>
-            <Button sx={{ color:'white' }} onClick={() => {navigate('/waiting');}}>CREATE</Button>
+            <Button sx={{ color:'white' }} onClick={() => handleCreateRoom()}>CREATE</Button>
             <Button sx={{ color:'white' }} onClick={handleClose}>CANCEL</Button>
           </Box>
         </Modal>

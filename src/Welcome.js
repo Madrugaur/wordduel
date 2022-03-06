@@ -34,11 +34,12 @@ function Welcome() {
   );
 }
 
-function SubmitBtn() {
+function SubmitBtn(props) {
+  const { handleSubmit } = props;
   const navigate = useNavigate();
   return(
     <div class="submitBtn2">
-          <Button onClick={() => {navigate('/dashboard');}} variant="contained">SUBMIT</Button>
+          <Button onClick={handleSubmit} variant="contained">SUBMIT</Button>
     </div>
   );
 }
