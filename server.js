@@ -147,6 +147,7 @@ const generateStats = (room, username) => {
  */
 app.post("/new-player", (req, res) => {
     const body = req.body
+    console.log(body)
     if (isEmpty(body)) {
         res.status(400).send(packError("Body missing"))
         return
