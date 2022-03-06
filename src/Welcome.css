@@ -6,4 +6,33 @@
   font-size: 72px;
   line-height: 84px;
   color: #FFFFFF;
+  text-align: center;
+  padding-top: 1em;
 }
+
+.play {
+  color: #FFFFFF;
+  width: 730px;
+  margin: auto;
+}
+
+.form {
+  margin-top: 3em;
+  margin-bottom:3em;
+  width: 200px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.submitBtn {
+  margin-top: 1em;
+}
+
+#outlined-required {
+  color: #FFFFFF;
+}
+
+#outlined-required-label {
+  color: #FFFFFF;
+}
+

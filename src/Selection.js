@@ -1,11 +1,11 @@
-import './Welcome.css';
+import './Selection.css';
 import React from 'react';
 import {Helmet} from 'react-helmet';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 
-function Welcome() {
+function Selection() {
   return (
     
     <>
@@ -17,14 +17,6 @@ function Welcome() {
     </div>
     <div>
       <NameForm />
-    </div>
-    <div className="play">
-      <p>How to Play:</p>
-      <ul>
-        <li>Create a public or private game or join an already created game.</li>
-        <li>Choose a five letter word for your opponent to try to guess.</li>
-        <li>Try to guess the word your opponent chose for you in the least amount of time possible and in as few guesses as possible.</li>
-      </ul>
     </div>
 
     
@@ -40,12 +32,8 @@ class NameForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {    
-    this.setState({ value: event.target.value }); 
-  }
-  handleSubmit(event) { 
-    console.log(this.state.value)
-  }
+  handleChange(event) {    this.setState({value: event.target.value});  }
+  handleSubmit(event) { console.log(this.state.value)}
 
   render() {
     return (
@@ -69,4 +57,4 @@ class NameForm extends React.Component {
   }
 }
 
-export default Welcome;
+export default Selection;

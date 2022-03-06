@@ -1,13 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-//import Welcome from './Welcome';
+import Welcome from './Welcome';
+import Selection from './Selection';
 import Dashboard from './Dashboard';
+
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
-    
+    <Selection /> 
     <Dashboard />
   </React.StrictMode>,
   document.getElementById('root')
