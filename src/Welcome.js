@@ -8,20 +8,21 @@ import { useNavigate } from 'react-router-dom';
 
 
 function Welcome() {
+  const navigate = useNavigate()
   const [username, setUsername] = React.useState(undefined)
   const handleSubmit = () => {
     fetch(process.env.REACT_APP_BACKEND_URL + "/new-player", {
       method: "POST",
-      body: {
-        name: username
-      }
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({name: username})
     }).then(res => res.json())
     .then(json => {
       console.log(json)
-      if (json.status === "Sucess"){
+      if (json.status === "sucess"){
         localStorage.setItem("username", username)
+        navigate("/dashboard")
       } else {
-        alert(username + " is already taken")
+        alert(json.error)
       }
     })
   }

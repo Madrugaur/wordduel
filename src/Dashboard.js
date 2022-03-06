@@ -92,10 +92,11 @@ function CreateRoomModal() {
     const handleCreateRoom = React.useCallback(() => {
       fetch(process.env.REACT_APP_BACKEND_URL + "/create-room", {
         method: "POST",
+        headers: {'Content-Type': 'application/json'},
         body: {
           private: private_,
           name: name,
-          username: "bob"
+          username: localStorage.getItem("username")
         }
       })
       navigate('/waiting');
