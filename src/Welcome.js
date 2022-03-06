@@ -1,4 +1,4 @@
-import './App.css';
+import './Welcome.css';
 import React from 'react';
 import {Helmet} from 'react-helmet';
 
@@ -29,8 +29,12 @@ class NameForm extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {    this.setState({value: event.target.value});  }
-  handleSubmit(event) { console.log(this.state.value)}
+  handleChange(event) {    
+    this.setState({ value: event.target.value }); 
+  }
+  handleSubmit(event) { 
+    console.log(this.state.value)
+  }
 
   render() {
     return (
