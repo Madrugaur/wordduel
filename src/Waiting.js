@@ -168,4 +168,5 @@ const ModalStyle = {
 //   }
 // }
 
+
 export default Waiting;

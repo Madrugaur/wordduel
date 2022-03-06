@@ -19,7 +19,10 @@
     "react-loading": "^2.0.3",
     "react-modal": "^3.14.4",
     "react-router-dom": "^6.2.2",
+    "react-screen-keyboard": "^1.4.1",
     "react-scripts": "^2.1.8",
+    "react-virtual-keyboard": "^1.0.2",
+    "simple-keyboard": "^3.4.58",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

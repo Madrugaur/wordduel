@@ -29,7 +29,7 @@ function Dashboard() {
     }).then(res => res.json())
     .then(json => {
       if (json.status === "Sucess") {
-        
+
         navigate("/waiting")
       }
     })
