@@ -4,7 +4,7 @@ import './index.css';
 import Welcome from './Welcome';
 import Selection from './Selection';
 import Dashboard from './Dashboard';
-
+import PageSwitcher from './PageSwitcher';
 import reportWebVitals from './reportWebVitals';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 // import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
@@ -29,9 +29,8 @@ const theme = createTheme({
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <Welcome /> 
+     <PageSwitcher/>
     </ThemeProvider>
-    
   </React.StrictMode>,
   document.getElementById('root')
 );
