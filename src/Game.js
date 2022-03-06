@@ -1,10 +1,44 @@
 import './Game.css';
-import React, { useState } from 'react';
+import React from 'react';
 import {Helmet} from 'react-helmet';
-
-let grid = [["h","e","l","l","o"],["f","u","c","c","c"],["h","d","d","d","d"],["h","d","d","d","d"],["f","d","d","d","d"],["f","u","c","k","y"]]
+let column = 0;
+let row = 0;
 function Game() { 
-   
+   const [grid, setGrid] = React.useState([[" "," "," "," "," "],
+                              [" "," ","","",""],
+                              ["","","","",""],
+                              ["","","","",""],
+                              ["","","","",""],
+                              ["","","","",""]])
+    const handleInsert = React.useCallback((letter, row, col) => {
+        grid[row][col - 1] = letter
+        setGrid([...grid])
+    }, [grid]);
+
+    const handleDelete = React.useCallback((letter, row, col) => {
+        grid[row][col - 1] = " "
+        setGrid([...grid])
+    }, [grid]);
+
+    const table = React.useMemo(() => (
+        <div >
+        <table className="Table-Grid">
+            <tbody>   
+                {grid.slice(0, grid.length).map((item, index) => {
+                    return (
+                    <tr>
+                        <td>{item[0]}</td>
+                        <td>{item[1]}</td>
+                        <td>{item[2]}</td>
+                        <td>{item[3]}</td>
+                        <td>{item[4]}</td>
+                    </tr>
+                    );
+                })}
+            </tbody>
+        </table>
+    </div>
+    ), [grid])
   return (
     <>
         <Helmet>
@@ -13,44 +47,37 @@ function Game() {
         <div className='Word-Duel'>
             Word Duel
         </div>
-
-        <div >
-            <table className="Table-Grid">
-                <tbody>   
-                    {grid.slice(0, grid.length).map((item, index) => {
-                        return (
-                        <tr>
-                            <td>{item[0]}</td>
-                            <td>{item[1]}</td>
-                            <td>{item[2]}</td>
-                            <td>{item[3]}</td>
-                            <td>{item[4]}</td>
-                        </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-        </div>
-        <ChangingColorTextField/>
+        {table}
+       
+        <ChangingColorTextField handle={handleInsert} handleD={handleDelete}/>
     </>
   );
 }
-function ChangingColorTextField() {
-    const [highlight, setHighlight] = useState("2px solid black");
+function ChangingColorTextField(props) {
+    const { handle, handleD} = props;
     function handleKeyPress(e) {
         var key = e.key;
-        console.log( "You pressed a key: " + key );
-        if (key === "r") {
-            setHighlight("2px solid red")
+        console.log(key)
+        console.log(e.keyCode)
+        if(column === 5){
+            row++;
+            column = 0;
         }
-        else if (key === "g") {
-            setHighlight("2px solid green")
+        if(row === 6){
+            //catch exception
         }
+        column++;
+        if (e.keyCode === 8) {
+            column--;
+            handleD(key,row,column)
+        }
+        handle(key, row, column)
     }
+    
 
     return (
         <div>
-            <input type="text" onKeyPress={(e) => handleKeyPress(e)} style={{border: highlight}} />
+            <input id="input" type="text" onKeyDown={(e) => handleKeyPress(e)}  />
         </div>
     )
 }
