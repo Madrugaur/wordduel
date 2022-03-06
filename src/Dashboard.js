@@ -101,14 +101,14 @@ function CreateRoomModal() {
                 id="outlined-required"
                 variant="outlined"
                 label="Room Name"
-                placeholder='Name...'
+                placeholder='Enter Room Name...'
                 color="secondary"
                 focused
                 />
                 <RadioButtonsGroup/>
             </Typography>
-            <Button sx={{ color:'white' }} onClick={() => {navigate('/waiting');}}>CREATE</Button>
-            <Button sx={{ color:'white' }} onClick={handleClose}>CANCEL</Button>
+            <Button sx={{ color:'black', backgroundColor: 'white' }} onClick={() => {navigate('/waiting');}}>CREATE</Button>
+            <Button sx={{ color:'black', backgroundColor: 'white', marginLeft: '.5em' }} onClick={handleClose}>CANCEL</Button>
           </Box>
         </Modal>
       </div>
@@ -123,8 +123,18 @@ function RadioButtonsGroup() {
           defaultValue="public"
           name="radio-buttons-group"
         >
-          <FormControlLabel sx={{ color:'white',paddingLeft:4 }}value="public" control={<Radio />} label="Public" />
-          <FormControlLabel sx={{ color:'white',paddingLeft:4 }}value="private" control={<Radio />} label="Private" />
+          <FormControlLabel sx={{ color:'white',paddingLeft:4 }}value="public" control={<Radio sx={{
+            color: 'white',
+            '&.Mui-checked': {
+              color: 'lightblue',
+            },
+  }}/>} label="Public" />
+          <FormControlLabel sx={{ color:'white',paddingLeft:4 }}value="private" color="secondary" control={<Radio sx={{
+            color: 'white',
+            '&.Mui-checked': {
+              color: 'lightblue',
+            },
+  }} />} label="Private" />
         </RadioGroup>
       </FormControl>
     );
@@ -136,7 +146,7 @@ const ModalStyle = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
-    bgcolor: 'black',
+    bgcolor: '#3D3D3D',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
