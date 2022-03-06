@@ -48,10 +48,6 @@
     width: 300px;
 }
 
-.List-Item:hover{
-    background-color: gray;
-}
-
 #outlined-required-label{
     color: #FFFFFF;
 }
