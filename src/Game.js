@@ -1,22 +1,15 @@
 import './Game.css';
 import React from 'react';
 import {Helmet} from 'react-helmet';
-let column = 0;
-let row = 0;
 function Game() { 
-   const [grid, setGrid] = React.useState([[" "," "," "," "," "],
-                              [" "," ","","",""],
+   const [grid, setGrid] = React.useState([["","","","",""],
+                              ["","","","",""],
                               ["","","","",""],
                               ["","","","",""],
                               ["","","","",""],
                               ["","","","",""]])
     const handleInsert = React.useCallback((letter, row, col) => {
-        grid[row][col - 1] = letter
-        setGrid([...grid])
-    }, [grid]);
-
-    const handleDelete = React.useCallback((letter, row, col) => {
-        grid[row][col - 1] = " "
+        grid[row][col] = letter
         setGrid([...grid])
     }, [grid]);
 
@@ -49,35 +42,43 @@ function Game() {
         </div>
         {table}
        
-        <ChangingColorTextField handle={handleInsert} handleD={handleDelete}/>
+        <ChangingColorTextField handle={handleInsert}/>
     </>
   );
 }
 function ChangingColorTextField(props) {
-    const { handle, handleD} = props;
-    function handleKeyPress(e) {
-        var key = e.key;
-        console.log(key)
-        console.log(e.keyCode)
-        if(column === 5){
-            row++;
-            column = 0;
-        }
-        if(row === 6){
-            //catch exception
-        }
-        column++;
-        if (e.keyCode === 8) {
-            column--;
-            handleD(key,row,column)
-        }
-        handle(key, row, column)
+    const { handle} = props;
+    const [row, setRow] = React.useState(0)
+    const [col, setCol] = React.useState(0)
+    const BACKSPACE = 8;
+    const ENTER = 13;
+    function isLetter(str) {
+        return str.length === 1 && str.match(/[a-z]/i);
     }
-    
+    const handleKeyPress = React.useCallback((e) => {
+        const code = e.keyCode;
+        if (code === BACKSPACE) {
+            if (col > 0) {
+                handle(" ", row, col-1);
+                setCol(col-1);
+            }
+        } else if (code === ENTER) {
+            if (col === 5) {
+                setRow(row + 1)
+                setCol(0)
+            }
+        } else if (isLetter(String.fromCharCode(code))) {
+            if (col  <= 4) {
+                handle(String.fromCharCode(code), row, col)
+                setCol(col+1)
+            }
+        }
+    }, [row, col])
+    console.log(col)
 
     return (
         <div>
-            <input id="input" type="text" onKeyDown={(e) => handleKeyPress(e)}  />
+            <input type="text" onKeyDown={(e) => handleKeyPress(e)}  />
         </div>
     )
 }
