@@ -36,7 +36,6 @@ function Welcome() {
 
 function SubmitBtn(props) {
   const { handleSubmit } = props;
-  const navigate = useNavigate();
   return(
     <div class="submitBtn2">
           <Button onClick={handleSubmit} variant="contained">SUBMIT</Button>
