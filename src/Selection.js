@@ -14,12 +14,15 @@ function Selection() {
     fetch(process.env.REACT_APP_BACKEND_URL, {
       method: "POST",
       headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          word: selection,
-          code: localStorage.getItem("code"),
-          username: localStorage.getItem("username")
-        })
-    }) 
+      body: JSON.stringify({
+        word: selection,
+        code: localStorage.getItem("code"),
+        username: localStorage.getItem("username")
+      })
+    }).then(res => res.json())
+    .then(json => {
+      
+    })
   }, [selection]);
   return (
     <>
