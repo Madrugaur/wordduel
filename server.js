@@ -2,8 +2,26 @@ const express = require("express")
 const bodyParser = require('body-parser')
 const {v4: uuid } = require("uuid")
 const fs = require('fs');
+const winston = require("winston");
+const morgan = require("morgan")
+const { format } = require("path");
+
+this.logFormat = winston.format.printf(info => {
+    return `{${info.level}} | ${info.timestamp} | ${info.message};`;
+});
+
+const logger = winston.createLogger({
+    level: "debug",
+    transports: [ new winston.transports.Console() ],
+    format: winston.format.combine( 
+        winston.format.timestamp(),
+        this.logFormat
+    )
+})
+
 
 const app = express()
+
 app.use(bodyParser.json())
 
 app.use(bodyParser.urlencoded({
@@ -16,9 +34,12 @@ app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
     res.setHeader('Access-Control-Allow-Credentials', true);
-    
     next();
 });
+app.use(morgan("[:method] \":url\" :status :response-time ms - :res[content-length] bytes", 
+    {stream:  { write: ((msg, encode) => logger.http(msg.trim()))} })
+)
+
 /**** MODEL SECTION ****/
 
 function Room(name, private, owner) {
@@ -43,11 +64,17 @@ function Room(name, private, owner) {
 
 /**** START DATA SECTION ****/
 
+logger.info("building data section")
+
+logger.verbose("init player set")
 const players = new Set()
+logger.verbose("init word lookup table")
 const raw = fs.readFileSync('words.txt').toString().split("\n");
 const wordLookupTable = {}
 raw.forEach(word => wordLookupTable[word] = word)
 
+logger.verbose("init rooms")
+logger.verbose("buidling test rooms")
 var roomExamplePrivate = new Room("Braden's Room", "true", "Braden Little")
 var roomExamplePublic = new Room("Renee's Room", "false", "Renee")
 var testRooms = {
@@ -55,6 +82,8 @@ var testRooms = {
     [roomExamplePublic.code]: roomExamplePublic
 }
 const rooms = testRooms
+
+logger.info("done data section")
 
 /**** START DATA SECTION ****/
 
@@ -109,6 +138,7 @@ const evaluate = (guess, challangeWord) => {
         else if (cArray.includes(g)) pattern += "Y" // match location
         else pattern += "B" // no match
     }
+    logger.verbose(`evaluating ${guess} against ${challangeWord}: ${pattern}`)
     return pattern
 }
 
@@ -125,6 +155,7 @@ const gameOver = (room) => {
     const p2 = room.players[1]
     const p1Done = (room.winner === p1) || (room.states[p1].length === 6)
     const p2Done = (room.winner === p2) || (room.states[p2].length === 6)
+    logger.verbose(`check game over: p1{ done: ${p1Done} }, p2{ done: ${p2Done} }`)
     return p1Done && p2Done
 }
 
@@ -150,16 +181,19 @@ app.post("/new-player", (req, res) => {
     const body = req.body
     console.log(body)
     if (isEmpty(body)) {
+        logger.debug("/new-player missing request body")
         res.status(400).send(packError("Body missing"))
         return
     }
     const playerName = body["name"]
     if ( isBlank(playerName) )  {
+        logger.debug("/new-player missing request parameter 'player-name'")
         res.status(400).send(packError("Missing player-name"))
         return;
     }
 
     if ( players.has(playerName) ) {
+        logger.debug("/new-player missing request parameter 'player-name'")
         res.status(409).send(packError("username already in use"))
         return
     }    
