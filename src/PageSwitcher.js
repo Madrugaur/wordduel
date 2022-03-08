@@ -8,7 +8,6 @@ import Dashboard from './Dashboard';
 import Game from './Game';
 export default function PageSwitcher() {
   return (
-    <BrowserRouter>
         <Routes>
             <Route path="/" element={<Navigate replace to="/welcome" />} />
             <Route exact path="/welcome" element={<Welcome/>}/>
@@ -17,6 +16,5 @@ export default function PageSwitcher() {
             <Route exact path="/selection" element={<Selection/>}/>
             <Route exact path="/game" element={<Game/>}/>
         </Routes>
-    </BrowserRouter>
   );
 }

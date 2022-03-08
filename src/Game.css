@@ -1,17 +1,114 @@
 .Word-Duel{
     padding-top: .25em;
 }
-.Table-Grid{
+.Main-Table-Grid{
     margin: auto;
-    color:white;
-    width: 520px;
+    color: white;
+    width: 350px;
+    height: 420px;
+    border-spacing: 5px 7px;
 }
-td{
+.main-tile{
     text-align: center;
-    width: 100px;
+    width: 60px;
     font-size: 50px;
-    border: 2px solid white;
+    font-weight: 100;
 }
-tr{
-    height: 85px;
+
+.bordered {
+    border: 2px solid rgb(161, 161, 161);
 }
+
+.main-row{
+    height: 70px;
+}
+
+.match {
+    background-color: #538d4e;
+}
+
+.close {
+    background-color: #b59f3b;
+}
+
+.miss {
+    background-color: #3a3a3c;
+}
+
+.animateCorrect {
+    animation: fadeCorrect 500ms linear 1;
+}
+
+.animateClose {
+    animation: fadeClose 500ms linear 1;
+}
+
+.animateMiss {
+    animation: fadeMiss 500ms linear 1;
+
+}
+
+.unknownWord {
+    animation: shake 500ms linear 1;
+    color: #CF6679;
+}
+
+.unknownWord  > * {
+    border-color: #CF6679
+}
+
+@keyframes fadeCorrect {
+    from {
+        background-color: black;
+        border: 2px solid rgb(161, 161, 161);
+    }
+
+    to {
+        background-color: #538d4e;
+    }
+}
+
+@keyframes fadeClose {
+    from {
+        background-color: black;
+        border: 2px solid rgb(161, 161, 161);
+    }
+
+    to {
+        background-color: #b59f3b;
+    }
+}
+
+@keyframes fadeMiss {
+    from {
+        background-color: black;
+        border: 2px solid rgb(161, 161, 161);
+    }
+
+    to {
+        background-color: #3a3a3c;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 0)}
+    10% { transform: translate(-1px, 0) }
+    20% { transform: translate(-3px, 0px) }
+    30% { transform: translate(3px, 0) }
+    40% { transform: translate(1px, 0) }
+    50% { transform: translate(-1px, 0) }
+    60% { transform: translate(-3px, 0) }
+    70% { transform: translate(3px, 0) }
+    80% { transform: translate(-1px, 0) }
+    90% { transform: translate(1px, 0) }
+    100% { transform: translate(1px, 0) }
+  }

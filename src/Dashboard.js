@@ -117,7 +117,6 @@ function CreateRoomModal() {
       .then(json => {
         if (json.status === "Sucess") {
           localStorage.setItem("code", json.code)
-          localStorage.setItem("waiting", true)
           navigate("/waiting")
         }
       })

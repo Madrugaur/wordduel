@@ -16,9 +16,7 @@ import { useNavigate } from "react-router";
 
 function Waiting() {
   const showShare = false;
-  const wordSubmitted = localStorage.getItem("wordSubmitted");
-  console.log("wordSubmitted")
-  console.log(wordSubmitted)
+  const [wordSubmitted] = React.useState(localStorage.getItem("wordSubmitted"))
   const shareLinkComp = () => (
     <>
       <div className="link">
@@ -49,6 +47,7 @@ function Waiting() {
         if (json.status === "word-selection" && wordSubmitted === null)
           navigate("/selection")
         else if (json.status === "ready")
+          localStorage.removeItem("wordSubmitted")
           navigate("/game")
       })
     }, 2500)

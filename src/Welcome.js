@@ -4,27 +4,18 @@ import {Helmet} from 'react-helmet';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { useNavigate } from 'react-router-dom';
+import { GameContext } from './contrext/GameContext';
+import { Tooltip } from '@mui/material';
 
 
 
 function Welcome() {
   const navigate = useNavigate()
+  const gameContext = React.useContext(GameContext);
   const [username, setUsername] = React.useState(undefined)
   const handleSubmit = () => {
-    fetch(process.env.REACT_APP_BACKEND_URL + "/new-player", {
-      method: "POST",
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({name: username})
-    }).then(res => res.json())
-    .then(json => {
-      console.log(json)
-      if (json.status === "sucess"){
-        localStorage.setItem("username", username)
-        navigate("/dashboard")
-      } else {
-        alert(json.error)
-      }
-    })
+    gameContext.setUsername(username)
+
   }
   const handleNameChange = React.useCallback((event) => {
     setUsername(event.target.value)
@@ -57,7 +48,7 @@ function Welcome() {
 function SubmitBtn(props) {
   const { handleSubmit } = props;
   return(
-    <div class="submitBtn2">
+    <div className="submitBtn2">
           <Button onClick={handleSubmit} variant="contained">SUBMIT</Button>
     </div>
   );
@@ -66,17 +57,19 @@ function SubmitBtn(props) {
 function NameForm(props) {
   const { handleNameChange, handleSubmit } = props;
   return (
-    <div class ="form2">
-      <div class="text2">
-      <TextField
-        id="outlined-helperText"
-        label="Username"
-        placeholder="Enter username..."
-        helperText="Some important text"
-        color="secondary"
-        focused
-        onChange={handleNameChange}
-      />
+    <div className="form2">
+      <div className="text2">
+        <Tooltip arrow position="left" title="Username already in user" show={"true"}>
+          <TextField
+            id="outlined-helperText"
+            label="Username"
+            placeholder="Enter username..."
+            helperText="Some important text"
+            color="secondary"
+            focused
+            onChange={handleNameChange}
+          />
+        </Tooltip>
       </div>
       <SubmitBtn handleSubmit={handleSubmit}/>
     </div>

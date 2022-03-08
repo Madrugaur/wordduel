@@ -4,6 +4,8 @@ import './index.css';
 import PageSwitcher from './PageSwitcher';
 import reportWebVitals from './reportWebVitals';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { GameContextProvider } from './contrext/GameContext';
+import { BrowserRouter } from 'react-router-dom';
 
 const theme = createTheme({
   palette: {
@@ -25,7 +27,11 @@ const theme = createTheme({
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-    <PageSwitcher/>
+      <BrowserRouter>
+        <GameContextProvider>
+          <PageSwitcher/>
+        </GameContextProvider>
+      </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
