@@ -13,7 +13,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import { useNavigate } from 'react-router-dom';
 import Loading from './Loading';
-
+import { GameContext } from './contrext/GameContext';
+import { withUsernameBoundry } from "./boundry/UsernameBoundry"
 function Dashboard() {
   const [ allRooms, setRooms ] = React.useState([])
   const [ filteredRooms, setFilteredRooms ] = React.useState([])
@@ -97,6 +98,7 @@ function CreateRoomModal() {
     const [open, setOpen] = React.useState(false);
     const [ private_, setPrivate ] = React.useState(false)
     const [ name, setName ] = React.useState("")
+    const { createRoom } = React.useContext(GameContext)
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const navigate = useNavigate();
@@ -105,21 +107,7 @@ function CreateRoomModal() {
       else setName(event.target.value)
     },[])
     const handleCreateRoom = React.useCallback(() => {
-      fetch(process.env.REACT_APP_BACKEND_URL + "/create-room", {
-        method: "POST",
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({
-          private: private_,
-          name: name,
-          username: localStorage.getItem("username")
-        })
-      }).then(res => res.json())
-      .then(json => {
-        if (json.status === "Sucess") {
-          localStorage.setItem("code", json.code)
-          navigate("/waiting")
-        }
-      })
+        createRoom(private_, name)
     })
     return (
       <div>

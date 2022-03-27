@@ -25,7 +25,7 @@ function Game() {
 	const [ erroredRowId, setErroredRowId ] = React.useState(undefined)
 
   const getClassName = (state) => {
-    if (state === "N") return clsx("bordered", "animated");
+    if (state === "N")      return clsx("bordered", "animated");
     else if (state === "B") return clsx("miss", "animateMiss");
     else if (state === "Y") return clsx("close", "animateClose");
     else if (state === "G") return clsx("match", "animateCorrect");
@@ -77,8 +77,7 @@ function Game() {
 						setErroredRowId(row)
 					} else {
 						alert("404 error")
-					}
-					
+					}	
         }
       })
     );

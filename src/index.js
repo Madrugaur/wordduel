@@ -21,7 +21,16 @@ const theme = createTheme({
       dark: '#ba000d',
       contrastText: '#000',
     },
+    error: {
+      main: '#cf6679',
+      color: '#cf6679'
+    }
   },
+  overrides: {
+    TextField: {
+      
+    }
+  }
 });
 
 ReactDOM.render(
